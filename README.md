@@ -10,18 +10,10 @@ Zero-telemetry, client-side Windows desktop defense against EVM address poisonin
 4. **Tamper-Evident Local Keystore:** Protects whitelisted counterparties using AES-256-GCM backed by the Windows Credential Manager (`wincred`).
 5. **Pre-Flight Nonce & Topology Oracle:** Flags zero-nonce EOAs sharing boundary characters with known contacts.
 
-## Building on Ubuntu Linux Without Windows
-
-```bash
-rustup target add x86_64-pc-windows-gnu
-cargo build --release --target x86_64-pc-windows-gnu --manifest-path src-tauri/Cargo.toml
-makensis packaging/windows/installer.nsi
-```
-
 ## Legal & Links
 
-- License: [Apache 2.0](../../../../LICENSE)
-- Privacy Policy: [PRIVACY.md](../../../../PRIVACY.md) | [hartsantivenom.com/privacy](https://hartsantivenom.com/privacy)
-- Terms of Service: [TERMS.md](../../../../TERMS.md)
+- License: [Apache 2.0](LICENSE)
+- Privacy Policy: [PRIVACY.md](PRIVACY.md) | [hartsantivenom.com/privacy](https://hartsantivenom.com/privacy)
+- Terms of Service: [TERMS.md](TERMS.md)
 - Official Portal: [hartsantivenom.com](https://hartsantivenom.com)
 - Support: [x401.tech@gmail.com](mailto:x401.tech@gmail.com)
