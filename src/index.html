@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hart's Anti-Venom Desktop Guard (Windows)</title>
+    <style>
+      :root {
+        --bg: #090a0f;
+        --card: #11141a;
+        --input: #050608;
+        --border: #1f2937;
+        --text: #f3f4f6;
+        --muted: #9ca3af;
+        --green: #22c55e;
+        --amber: #f59e0b;
+        --red: #ef4444;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, monospace;
+        padding: 24px;
+      }
+      .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+      .badge {
+        display: inline-block;
+        background: rgba(34, 197, 94, 0.14);
+        color: var(--green);
+        border: 1px solid rgba(34, 197, 94, 0.4);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      h1 { font-size: 21px; margin: 10px 0 4px 0; }
+      p.sub { color: var(--muted); font-size: 13px; margin: 0; }
+      .tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+      .tab {
+        background: var(--card);
+        color: var(--muted);
+        border: 1px solid var(--border);
+        padding: 8px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .tab.active {
+        color: var(--green);
+        border-color: var(--green);
+        background: rgba(34, 197, 94, 0.08);
+      }
+      .panel { display: none; }
+      .panel.active { display: block; }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 18px;
+        margin-bottom: 14px;
+      }
+      label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+      input, textarea {
+        width: 100%;
+        background: var(--input);
+        border: 1px solid #374151;
+        border-radius: 6px;
+        padding: 10px 12px;
+        color: #fff;
+        font-family: Consolas, monospace;
+        font-size: 13px;
+        outline: none;
+        margin-bottom: 10px;
+      }
+      input:focus, textarea:focus { border-color: var(--green); }
+      button.primary {
+        background: var(--green);
+        color: #041108;
+        border: none;
+        border-radius: 6px;
+        padding: 9px 16px;
+        font-weight: 700;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      button.danger {
+        background: rgba(239, 68, 68, 0.15);
+        color: var(--red);
+        border: 1px solid rgba(239, 68, 68, 0.4);
+        border-radius: 5px;
+        padding: 4px 10px;
+        font-size: 11px;
+        cursor: pointer;
+      }
+      .result {
+        margin-top: 12px;
+        padding: 14px;
+        background: var(--input);
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        font-size: 14px;
+        word-break: break-all;
+      }
+      .palette { display: inline-flex; gap: 4px; vertical-align: middle; margin-right: 10px; }
+      .block { width: 8px; height: 20px; border-radius: 2px; }
+      .dim { opacity: 0.45; color: var(--muted); }
+      .highlight { color: var(--green); font-weight: 700; }
+      .row { display: flex; gap: 10px; align-items: center; }
+      .contact-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+      }
+      .contact-item:last-child { border-bottom: none; }
+      .status-safe { color: var(--green); font-weight: 700; }
+      .status-warn { color: var(--amber); font-weight: 700; }
+      .status-crit { color: var(--red); font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div>
+        <span class="badge">Windows Native • Zero Telemetry • AES-256-GCM</span>
+        <h1>Hart's Anti-Venom Desktop Guard</h1>
+        <p class="sub">5-Layer EVM Address Poisoning &amp; Middle-Hex Verification Engine</p>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="layer3">L3: Middle-Hex &amp; Visual Hash</button>
+      <button class="tab" data-tab="layer5">L5: Pre-Flight Oracle</button>
+      <button class="tab" data-tab="layer4">L4: Encrypted Keystore</button>
+      <button class="tab" data-tab="layer1">L1: Log Scrubber</button>
+      <button class="tab" data-tab="layer2">L2: History Pairing</button>
+    </div>
+
+    <!-- LAYER 3 -->
+    <div id="layer3" class="panel active">
+      <div class="card">
+        <label for="addrInput">Paste EVM Counterparty Address for Middle-Hex &amp; Keccak-256 Visual Hash Verification:</label>
+        <input type="text" id="addrInput" placeholder="0x..." autocomplete="off" />
+        <div class="result" id="l3Result" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- LAYER 5 -->
+    <div id="layer5" class="panel">
+      <div class="card">
+        <label for="pfAddr">Candidate Destination Address:</label>
+        <input type="text" id="pfAddr" placeholder="0x..." autocomplete="off" />
+        <div class="row">
+          <div style="flex:1;">
+            <label for="pfNonce">Candidate Outbound Nonce (`eth_getTransactionCount`):</label>
+            <input type="number" id="pfNonce" value="0" min="0" />
+          </div>
+          <div style="padding-top:14px;">
+            <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
+              <input type="checkbox" id="pfContract" style="width:auto;margin:0;" /> Verified Smart Contract
+            </label>
+          </div>
+        </div>
+        <button class="primary" id="pfBtn">Run Pre-Flight Poison Check</button>
+        <div class="result" id="pfResult" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- LAYER 4 -->
+    <div id="layer4" class="panel">
+      <div class="card">
+        <label for="ksLabel">Trusted Contact Label:</label>
+        <input type="text" id="ksLabel" placeholder="e.g., Cold Vault Multisig" />
+        <label for="ksAddr">Trusted EVM Address:</label>
+        <input type="text" id="ksAddr" placeholder="0x..." />
+        <button class="primary" id="ksSaveBtn">Encrypt &amp; Save to Windows Credential Store</button>
+        <div id="ksStatus" style="margin-top:8px;font-size:12px;color:var(--muted);"></div>
+      </div>
+      <div class="card">
+        <label>Decrypted Trusted Contacts (AES-256-GCM):</label>
+        <div id="ksList"></div>
+      </div>
+    </div>
+
+    <!-- LAYER 1 -->
+    <div id="layer1" class="panel">
+      <div class="card">
+        <label for="l1MinDust">Minimum Token Raw Unit Threshold (filters 0-value &amp; dust):</label>
+        <input type="number" id="l1MinDust" value="1000" min="1" />
+        <label for="l1Json">Paste JSON Array of ERC-20 `eth_getLogs` Entries (`[{"tx_hash":"0x...","topics":["0xddf252ad...","0x...","0x..."],"data":"0x..."}]`):</label>
+        <textarea id="l1Json" rows="6" placeholder='[{"tx_hash":"0x...","topics":["0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef","0x000000000000000000000000...","0x000000000000000000000000..."],"data":"0x0"}]'></textarea>
+        <button class="primary" id="l1Btn">Scrub Poison &amp; Dust Logs</button>
+        <div class="result" id="l1Result" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- LAYER 2 -->
+    <div id="layer2" class="panel">
+      <div class="card">
+        <label for="l2Wallet">Your Wallet Address:</label>
+        <input type="text" id="l2Wallet" placeholder="0x..." />
+        <label for="l2Json">Paste Account Transaction History JSON (`[{"tx_hash":"0x...","from":"0x...","to":"0x...","value_wei":"..."}]`):</label>
+        <textarea id="l2Json" rows="6" placeholder='[{"tx_hash":"0x...","from":"0x...","to":"0x...","value_wei":"1000000000000000000"}]'></textarea>
+        <button class="primary" id="l2Btn">Separate Signed Outbound vs. Unsolicited Inbound</button>
+        <div class="result" id="l2Result" style="display:none;"></div>
+      </div>
+    </div>
+
+    <script>
+      const invoke = window.__TAURI__.core.invoke;
+
+      // Tab navigation
+      document.querySelectorAll('.tab').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
+          document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'));
+          btn.classList.add('active');
+          document.getElementById(btn.dataset.tab).classList.add('active');
+          if (btn.dataset.tab === 'layer4') refreshContacts();
+        });
+      });
+
+      // Layer 3: Real-time Middle-Hex & Keccak Visual Hash
+      const addrInput = document.getElementById('addrInput');
+      const l3Result = document.getElementById('l3Result');
+      addrInput.addEventListener('input', async () => {
+        const val = addrInput.value.trim();
+        if (!val) { l3Result.style.display = 'none'; return; }
+        const res = await invoke('inspect_address', { target: val });
+        l3Result.textContent = '';
+        l3Result.style.display = 'block';
+
+        if (!res.is_valid_format) {
+          const err = document.createElement('div');
+          err.className = 'status-crit';
+          err.textContent = res.threat_flag;
+          l3Result.appendChild(err);
+          return;
+        }
+
+        const top = document.createElement('div');
+        const palette = document.createElement('span');
+        palette.className = 'palette';
+        res.color_blocks.forEach((hex) => {
+          const b = document.createElement('span');
+          b.className = 'block';
+          b.style.backgroundColor = hex;
+          palette.appendChild(b);
+        });
+
+        const pre = document.createElement('span');
+        pre.className = 'dim';
+        pre.textContent = res.prefix;
+
+        const mid = document.createElement('span');
+        mid.className = 'highlight';
+        mid.textContent = res.middle_segment;
+
+        const suf = document.createElement('span');
+        suf.className = 'dim';
+        suf.textContent = res.suffix;
+
+        top.append(palette, pre, document.createTextNode('...'), mid, document.createTextNode('...'), suf);
+        l3Result.appendChild(top);
+
+        if (res.threat_flag) {
+          const warn = document.createElement('div');
+          warn.className = 'status-warn';
+          warn.style.marginTop = '8px';
+          warn.textContent = res.threat_flag;
+          l3Result.appendChild(warn);
+        }
+      });
+
+      // Layer 5: Pre-Flight Oracle
+      document.getElementById('pfBtn').addEventListener('click', async () => {
+        const resBox = document.getElementById('pfResult');
+        resBox.style.display = 'block';
+        try {
+          const res = await invoke('preflight_check', {
+            candidateAddress: document.getElementById('pfAddr').value,
+            candidateOutboundNonce: Number(document.getElementById('pfNonce').value || 0),
+            isContract: document.getElementById('pfContract').checked
+          });
+          resBox.textContent = '';
+          const badge = document.createElement('div');
+          badge.className =
+            res.risk_level === 'SAFE'
+              ? 'status-safe'
+              : res.risk_level === 'WARNING'
+              ? 'status-warn'
+              : 'status-crit';
+          badge.textContent = 'STATUS: ' + res.risk_level;
+          const desc = document.createElement('div');
+          desc.style.marginTop = '6px';
+          desc.textContent = res.reason;
+          resBox.append(badge, desc);
+        } catch (e) {
+          resBox.textContent = String(e);
+        }
+      });
+
+      // Layer 4: Encrypted Keystore
+      async function refreshContacts() {
+        const listEl = document.getElementById('ksList');
+        listEl.textContent = '';
+        try {
+          const contacts = await invoke('list_trusted_contacts');
+          if (!contacts.length) {
+            listEl.textContent = 'No encrypted contacts saved yet.';
+            return;
+          }
+          contacts.forEach((c) => {
+            const row = document.createElement('div');
+            row.className = 'contact-item';
+            const info = document.createElement('span');
+            info.textContent = `${c.label} — ${c.address}`;
+            const del = document.createElement('button');
+            del.className = 'danger';
+            del.textContent = 'Delete';
+            del.onclick = async () => {
+              await invoke('delete_trusted_contact', { address: c.address });
+              refreshContacts();
+            };
+            row.append(info, del);
+            listEl.appendChild(row);
+          });
+        } catch (e) {
+          listEl.textContent = String(e);
+        }
+      }
+
+      document.getElementById('ksSaveBtn').addEventListener('click', async () => {
+        const statusEl = document.getElementById('ksStatus');
+        try {
+          await invoke('save_trusted_contact', {
+            label: document.getElementById('ksLabel').value,
+            address: document.getElementById('ksAddr').value
+          });
+          document.getElementById('ksLabel').value = '';
+          document.getElementById('ksAddr').value = '';
+          statusEl.textContent = 'Encrypted with AES-256-GCM and stored in %LOCALAPPDATA%\\HartsAntiVenom\\keystore.enc';
+          refreshContacts();
+        } catch (e) {
+          statusEl.textContent = String(e);
+        }
+      });
+
+      // Layer 1: Log Scrubber
+      document.getElementById('l1Btn').addEventListener('click', async () => {
+        const resBox = document.getElementById('l1Result');
+        resBox.style.display = 'block';
+        try {
+          const report = await invoke('scrub_transfer_logs', {
+            logsJson: document.getElementById('l1Json').value,
+            minDustThreshold: Number(document.getElementById('l1MinDust').value || 1)
+          });
+          resBox.textContent = JSON.stringify(report, null, 2);
+        } catch (e) {
+          resBox.textContent = String(e);
+        }
+      });
+
+      // Layer 2: History Pairing
+      document.getElementById('l2Btn').addEventListener('click', async () => {
+        const resBox = document.getElementById('l2Result');
+        resBox.style.display = 'block';
+        try {
+          const report = await invoke('classify_history', {
+            userWallet: document.getElementById('l2Wallet').value,
+            txsJson: document.getElementById('l2Json').value
+          });
+          resBox.textContent = JSON.stringify(report, null, 2);
+        } catch (e) {
+          resBox.textContent = String(e);
+        }
+      });
+    </script>
+  </body>
+</html>

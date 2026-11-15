@@ -1,0 +1,25 @@
+# Build & compilation artifacts
+target/
+src-tauri/target/
+dist/
+build/
+
+# Node & package manager caches
+node_modules/
+npm-debug.log*
+.pnpm-store/
+
+# Compiled Windows installers & raw binaries (attach to GitHub Releases instead)
+*.exe
+*.msi
+*.dll
+*.pdb
+
+# Local secrets, environment & OS files
+.env
+.env.*
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~

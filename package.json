@@ -1,0 +1,18 @@
+{
+  "name": "harts-anti-venom-windows",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Zero-telemetry Windows desktop guard against EVM address poisoning.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/golfgolfgolf200/harts-anti-venom-windows.git"
+  },
+  "scripts": {
+    "tauri": "tauri",
+    "build:win": "tauri build --runner cargo-xwin --target x86_64-pc-windows-msvc"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0"
+  }
+}

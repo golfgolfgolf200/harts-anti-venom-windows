@@ -1,0 +1,27 @@
+[package]
+name = "harts-anti-venom-windows"
+version = "1.0.0"
+description = "Zero-telemetry Windows desktop guard against EVM address poisoning."
+authors = ["Josh Hart <x401.tech@gmail.com>"]
+license = "Apache-2.0"
+repository = "https://github.com/golfgolfgolf200/harts-anti-venom-windows"
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+name = "harts_anti_venom_windows_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.0.0", features = [] }
+
+[dependencies]
+tauri = { version = "2.0.0", features = [] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tiny-keccak = { version = "2.0.2", features = ["keccak"] }
+hex = "0.4.3"
+aes-gcm = "0.10.3"
+rand = "0.8.5"
+keyring = { version = "3.6.1", features = ["windows-native", "sync-secret-service"] }
+dirs = "5.0.1"
